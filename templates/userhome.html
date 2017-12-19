@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link href="{% static 'mystyle.css' %}" rel="stylesheet">
+</head>
+<body>
+	<nav>
+		<ul id="navic" class="navic">
+			<li><a href="{% url 'start' %}">Home</a></li>
+			{% if user.is_authenticated %}
+			<li><a href="{% url 'userhome' %}">Profile</a></li>
+			<li><a href="{% url 'logout' %}">Log out</a></li>
+			{% else %}
+			<li><a href="{% url 'login' %}">Log in</a></li>
+			<li><a href="{% url 'signup' %}">Sign up</a></li>
+			{% endif %}
+		</ul>
+	</nav>
+
+	Welcome home, {{user}}!</br>
+	Email: {{user.email}}</br>
+	Name: {{user.first_name}}</br>
+	Description: {{user.userprofile.description}}</br>
+	City: {{user.userprofile.city}}</br>
+
+</body>
+</html>

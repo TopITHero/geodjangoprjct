@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+{% load leaflet_tags %}
+{% load static %}
+{% load geojson_tags %}
+
+
+	
+	{% block content %}
+	<style>
+		.bg {
+	background-image: url("{% get_media_prefix %}bimg.jpg");
+	
+		}
+	</style>
+	
+	
+
+	<div class="bg">
+	<nav>
+		<ul id="navic" class="navic">
+			<li><a href="{% url 'start' %}">Home</a></li>
+			{% if user.is_authenticated %}
+			<li><a href="{% url 'userhome' %}">Profile</a></li>
+			<li><a href="{% url 'logout' %}">Log out</a></li>
+			{% else %}
+			<li><a href="{% url 'login' %}">Log in</a></li>
+			<li><a href="{% url 'signup' %}">Sign up</a></li>
+			{% endif %}
+		</ul>
+	</nav>
+	<div class="scrollblock">
+	<h1 >Scroll down and enjoy ... </h1>	
+	<div  id="scroll" class="arrow bounce">
+		<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="60px" height="80px" viewBox="0 0 50 80" xml:space="preserve">
+    <polyline fill="none" stroke="#FFFFFF" stroke-width="1"   stroke-linecap="round" stroke-linejoin="round" points="
+	0,0 25,25 50,0 "/>
+  </svg>  
+	</div>
+	</div>
+	</div>
+	
+	
+	<div class="container" style="height: 100%">
+	<div class="mapblock">	
+	{% leaflet_map "mymap" callback="ourfunction" %}
+	<h3>To view gallery press the button below </h3>
+	<button id="scroll2">View</button>
+	</div>
+
+	</div>
+	<script>
+
+		function ourfunction(map, options){
+
+			var osm = 'http://{s}.tile.openstreetmap.org/{z}{y}{x}.png';
+
+			var worlddata = new L.GeoJSON.AJAX("{% url 'worlddata' %}", {
+				onEachFeature: function(feature,layer){
+					layer.bindPopup(feature.properties.name.toString());
+				}
+			});
+			worlddata.addTo(map);
+			ourdata = '{% url "data" %}';
+			{% for p in point %}
+			var icon{{forloop.counter0}} = L.icon({
+				iconUrl: '{{p.image.url}}',
+				iconSize: [32, 37],
+				iconAnchor: [16, 37],
+				popupAnchor: [0, -28]
+			});
+			$.getJSON(ourdata,function(data){
+				L.geoJson(data['features'][{{forloop.counter0}}],{
+				pointToLayer: function (feature, latlng) {
+				return L.marker(latlng, {icon: icon{{forloop.counter0}}});
+				}
+			}).addTo(map);
+
+			});	
+			
+			{% endfor %}
+
+			var baseLayers = {
+				"OSM": osm,
+			};
+			var groupedOverlays = {
+			  "Layers": {
+			   
+			    "Countries": worlddata,
+			  },
+			  
+			};
+
+			L.control.groupedLayers(baseLayers, groupedOverlays).addTo(map);
+			
+		}
+	</script>
+	<hr/>
+	<div class="gallery">
+  <div class="container">
+    <div class="row">
+    {% for p in point %}
+      {% if point|length|divisibleby:3 %} <!-- ###########################   якшо всі по три   ############# -->
+          <div class="col-md-4 col-sm-12 col-xs-12" data-aos="fade-up">
+            <figure class="fig">
+              <img src="{{p.image.url}}">
+              <figcaption>
+                  <div class="jumbotron">
+					 <h1>{{p.title}}</h1>
+                  {{p.description|linebreaksbr}}<br>
+                  </div> 
+              </figcaption>
+            </figure>
+          </div>
+      {% elif point|length|add:"1"|divisibleby:3 %} <!-- ###########################   в кінці 2   ############# -->
+        {% if forloop.counter < point|length|add:"-1" %}
+          <div class="col-md-4 col-sm-12 col-xs-12" data-aos="fade-up">
+            <figure class="fig">
+              <img src="{{p.image.url}}">
+              <figcaption>
+                  <h1>{{p.title}}</h1>
+					<div class="jumbotron">
+					 <h1>{{p.title}}</h1>
+                  {{p.description|linebreaksbr}}<br>
+                  </div>                 
+              </figcaption>
+            </figure>
+          </div>
+        {% else %}
+            <div class="col-md-6 col-sm-12 col-xs-12" data-aos="fade-up">
+            <figure class="fig">
+              <img src="{{p.image.url}}">
+              <figcaption>
+                  <div class="jumbotron">
+					 <h1>{{p.title}}</h1>
+                  {{p.description|linebreaksbr}}<br>
+                  </div>          
+              </figcaption>
+            </figure>
+          </div>
+        {% endif %}
+      {% elif point|length|add:"2"|divisibleby:3 %} <!-- ###########################   в кінці 1   ############# -->
+        {% if forloop.counter < point|length|add:"-3" %}
+          <div class="col-md-4 col-sm-12 col-xs-12" data-aos="fade-up">
+            <figure class="fig">
+              <img src="{{p.image.url}}">
+              <figcaption>
+                  <div class="jumbotron">
+					 <h1>{{p.title}}</h1>
+                  {{p.description|linebreaksbr}}<br>
+                  </div>                
+              </figcaption>
+            </figure>
+          </div>
+        {% else %}
+            <div class="col-md-6 col-sm-12 col-xs-12" data-aos="fade-up">
+            <figure class="fig">
+              <img src="{{p.image.url}}">
+              <figcaption>
+                  <div class="jumbotron">
+					 <h1>{{p.title}}</h1>
+                  {{p.description|linebreaksbr}}<br>
+                  </div>               
+              </figcaption>
+            </figure>
+          </div>  
+        {% endif %}
+      {% endif %}   
+    {% endfor %}  
+    </div>
+  </div>
+</div>
+	</div>	
+	{% endblock %}
+    

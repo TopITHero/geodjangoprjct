@@ -1,0 +1,125 @@
+body, html {
+    height: 100%;
+    
+}
+* {
+	font-family: 'Roboto', sans-serif;
+}
+body {
+	background-color: #FFFFF3;
+	
+	
+}
+
+#mymap {
+	height: 70%;
+	width: 100%;
+	margin: 0 auto;
+}
+.bg {
+	background-image: url("{% get_media_prefix %}bimg.jpg");
+	padding: 1px;
+    /* The image used */
+   
+    /* Full height */
+    height: 100%;
+
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.mapblock {
+	height: 100%;
+	padding: 3%;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-30px);
+  }
+  60% {
+    transform: translateY(-15px);
+  }
+}
+
+
+
+.arrow {
+  
+  cursor: pointer;
+  margin: 0 auto;
+  width: 55px;
+  height: 55px;
+  background-size: contain;
+}
+
+.bounce {
+  animation: bounce 2s infinite;
+}
+
+.scrollblock {
+	font-weight: 300;
+	margin-top: 23%;
+	text-align: center;
+	color: white;
+	background-image: -webkit-gradient(
+  linear, left top,right top, from(rgba(192,195,198,0.1)),
+  to(rgba(192,195,198,0.1)), color-stop(.5,rgb(192, 195, 198,0.4))
+);
+	
+}
+svg {
+	border-radius: 1px solid black;
+}
+
+.gallery {
+	height: 100%;
+	width: 100%;
+	background: #ffffff;
+}
+hr {
+    display: block;
+    height: 4px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    box-shadow: 
+    margin: 1em 0;
+    padding: 0;
+}
+.fig {
+	margin: 0 auto;
+}
+.container {
+	max-width: 60%;
+}
+.fixed {
+  position: fixed;
+  width: 100%;
+  z-index: 5;
+}
+.navic {
+  
+  list-style-type: none;
+  margin: 0px;
+  padding: 0px;
+ overflow: hidden;
+}
+.navic li {
+  font-weight: 300;
+  font-size: 20px; 
+  float: left;
+  
+}
+.navic li a {
+  display: inline-block;
+  padding: 12px 12px;
+  color: #777;
+ 
+}
+ul.navic li.icon{
+  display: none;
+}
