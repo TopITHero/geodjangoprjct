@@ -1,0 +1,74 @@
+<WMS_Capabilities version="1.3.0">
+<Service xmlns:xlink="http://www.w3.org/1999/xlink">
+<Name>WMS</Name>
+<Title>KPI WMS</Title>
+<Abstract>WMS для курсовой</Abstract>
+<KeywordList>
+<Keyword>Курсовая</Keyword>
+<Keyword>Django wms</Keyword>
+</KeywordList>
+<OnlineResource xlink:type="simple" xlink:href="http://127.0.0.1:8000/wms_server" />
+<ContactInformation>
+<ContactPersonPrimary>
+<ContactPerson>Pavlo Vovchanovsky and Andrew Voitsekhovskyy</ContactPerson>
+<ContactOrganization>NTUU KPI</ContactOrganization>
+</ContactPersonPrimary>
+<ContactPosition>Student</ContactPosition>
+ <ContactAddress>
+<City>Kyiv</City>
+<Country>Ukraine</Country>
+</ContactAddress>
+<ContactElectronicMailAddress>pavlo.vovchanovsky@gmail.com</ContactElectronicMailAddress>
+</ContactInformation>
+<LayerLimit>100</LayerLimit>
+<MaxWidth>2000</MaxWidth>
+<MaxHeight>2000</MaxHeight>
+</Service>
+<Capability xmlns:xlink="http://www.w3.org/1999/xlink">
+<Request>
+<GetCapabilities>
+<Format>text/xml</Format>
+<DCPType>
+<HTTP>
+<Get>
+<OnlineResource xlink:type="simple" xlink:href="http://127.0.0.1:8000/wms_server?" />
+</Get>
+</HTTP>
+</DCPType>
+</GetCapabilities>
+<GetMap>
+<Format>image/png</Format>
+<DCPType>
+<HTTP>
+<Get>
+<OnlineResource xlink:type="simple" xlink:href="http://127.0.0.1:8000/wms_server?" />
+</Get>
+</HTTP>
+</DCPType>
+</GetMap>
+<GetFeatureInfo>
+<Format>text/xml</Format>
+<DCPType>
+<HTTP>
+<Get>
+<OnlineResource xlink:type="simple" xlink:href="hhttp://127.0.0.1:8000/wms_server?" />
+</Get>
+</HTTP>
+</DCPType>
+</GetFeatureInfo>
+<GetLegendGraphic>
+<Format>image/png</Format>
+<DCPType>
+<HTTP>
+<Get>
+<OnlineResource xlink:type="simple" xlink:href="http://127.0.0.1:8000/wms_server?" />
+</Get>
+</HTTP>
+</DCPType>
+</GetLegendGraphic>
+</Request>
+<Exception>
+<Format>XML</Format>
+</Exception>
+</Capability>
+</WMS_Capabilities>
