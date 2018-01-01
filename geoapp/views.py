@@ -9,7 +9,13 @@ from django.contrib.auth.decorators import login_required
 
 from .models import Picture,WorldBorder
 from .forms import EditUserForm
+from math import *
 
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+from .EXIF import *
+
+from .shapehandler import *
 
 def startpage(request):
 
@@ -33,6 +39,41 @@ def signup(request):
 		args = {'form': form}
 		return render(request,'signup.html', args)
 
+def wms_server(query):
+	request=query.GET.get('request')
+	if request == "GetCapabilities":
+		return HttpResponse(open('geoapp/capabilities.xml').read(), content_type='text/xml')
+	elif request == "GetLegendGraphic":
+		image_data = open("geoapp/legend.png", "rb").read()
+		return HttpResponse(image_data, content_type="image/png")
+	elif request == "GetFeatureInfo":
+		from django.core import serializers
+		data = serializers.serialize("xml", Picture.objects.all())
+		from django.core.files import File
+		f = open('geoapp/pictures.xml', 'w')
+		myfile = File(f)
+		myfile.write(data)
+		myfile.close()
+		return HttpResponse(open('geoapp/pictures.xml').read(), content_type='text/xml')
+	elif request == 'GetMap':
+		bbox =  query.GET.get('bbox')
+		z =int(query.GET.get('z'))
+		lat=float(query.GET.get('lat'))
+		lon=float(query.GET.get('lon'))
+		x = (lon+165)*pow(2,z)//360 #135
+		y = (105-lat)*pow(2,z)//180 #90+14.4
+		image_data = open("mediafiles/QTiles/"+str(z)+"/"+str(int(x))+"/"+str(int(y))+".png", "rb").read()
+		return HttpResponse(image_data, content_type="image/png")
+def wms(request):
+	capabilities_url = "wms_server/?request=GetCapabilities"
+	getmap_url = "wms_server/?request=GetMap&z=3&lon=15&lat=20"
+	featureinfo_url = "wms_server/?request=GetFeatureInfo"
+	legend_url = "wms_server/?request=GetLegendGraphic"
+	args = {
+		"capabilities_url":capabilities_url, "getmap_url": getmap_url, "featureinfo_url": featureinfo_url, "legend_url": legend_url,
+	}
+	return render(request, 'wms.html', args)
+
 @login_required
 def userhome(request):
 	args = {'user': request.user}
@@ -54,4 +95,15 @@ def edit_profile(request):
 
 		return render(request,"edit.html", args)		
 
-		
+
+def simple_upload(request):
+    if request.method == 'POST' and request.FILES['myfile']:
+        myfile = request.FILES['myfile']
+        fs = FileSystemStorage()
+        filename = fs.save(myfile.name, myfile)
+        uploaded_file_url = fs.url(filename)
+        shphand(uploaded_file_url)
+        return render(request, 'simple_upload.html', {
+            'uploaded_file_url': uploaded_file_url
+        })
+    return render(request, 'simple_upload.html')

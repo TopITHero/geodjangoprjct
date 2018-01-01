@@ -14,5 +14,9 @@ urlpatterns = [
     url(r'^logout/$', auth_views.logout, {'next_page': 'login'}, name='logout'),
     url(r'^userhome/$', views.userhome, name = 'userhome'),
     url(r'^signup/$', views.signup, name = 'signup'),
-    url(r'^userhome/edit/$', views.edit_profile, name = 'editprofile')
+    url(r'^userhome/edit/$', views.edit_profile, name = 'editprofile'),
+    url(r'^wms_server/$', views.wms_server),
+    url(r'^wms/', views.wms),
+    url(r'^upload/', views.simple_upload),
+
 ]
